@@ -18,6 +18,14 @@ final class TaskViewModel: ObservableObject {
     @Published var isPresented = false
     @Published var searched = ""
     
+    var filteredTaskItems: [TaskItem] {
+        if searched.isEmpty {
+            return taskItems
+        } else {
+            return taskItems.filter { ($0.name?.lowercased() ?? "").contains(searched.lowercased()) }
+        }
+    }
+    
     init(persistenceController: PersistenceController) {
         self.viewContext = persistenceController.persistentContainer.viewContext
         fetchData()
@@ -35,7 +43,7 @@ final class TaskViewModel: ObservableObject {
     }
     
     func removeTaskItem(offsets: IndexSet) {
-        Logger.log.info("removing items at \(offsets)")
+        Logger.log.info("removing items at \(offsets.map({$0}))")
         offsets.map { taskItems[$0] }.forEach({ taskItem in
             viewContext.delete(taskItem)
         })

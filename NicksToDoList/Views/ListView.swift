@@ -12,13 +12,12 @@ struct ListView: View {
     
     var body: some View {
         List {
-            ForEach (viewModel.taskItems.filter {
-                viewModel.searched.isEmpty ? true : ($0.name?.lowercased() ?? "").contains(viewModel.searched.lowercased())} ){ task in
-                    TaskView(taskItem: task)
-                }
-                .onDelete(perform: {
-                    deleteItems(offsets: $0)
-                })
+            ForEach (viewModel.filteredTaskItems){ task in
+                TaskView(taskItem: task)
+            }
+            .onDelete(perform: {
+                deleteItems(offsets: $0)
+            })
         }.listStyle(InsetListStyle())
     }
     
